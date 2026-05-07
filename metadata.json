@@ -1,0 +1,8 @@
+{
+  "name": "Farm Origlena",
+  "description": "A companion for smallholder farmers. Where crops find their perfect start.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": []
+}
