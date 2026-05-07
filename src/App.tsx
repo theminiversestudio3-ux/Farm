@@ -13,65 +13,101 @@ import * as Icons from 'lucide-react';
 
 function BottomNav() {
   const { t } = useLanguage();
+  const [showMore, setShowMore] = useState(false);
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 max-w-7xl mx-auto bg-white border-t border-stone-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-safe z-50">
-      <div className="flex justify-around items-center h-16">
-        <NavLink 
-          to="/" 
-          className={({ isActive }) => 
-            `flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? 'text-green-700' : 'text-stone-400 hover:text-stone-600'}`
-          }
-        >
-          <Icons.Home size={22} />
-          <span className="text-[10px] font-semibold">{t('nav_home')}</span>
-        </NavLink>
-        <NavLink 
-          to="/sow" 
-          className={({ isActive }) => 
-            `flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? 'text-green-700' : 'text-stone-400 hover:text-stone-600'}`
-          }
-        >
-          <Icons.Sprout size={22} />
-          <span className="text-[10px] font-semibold">{t('nav_sow')}</span>
-        </NavLink>
-        <NavLink 
-          to="/diagnose" 
-          className={({ isActive }) => 
-            `flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? 'text-green-700' : 'text-stone-400 hover:text-stone-600'}`
-          }
-        >
-          <Icons.ScanSearch size={22} />
-          <span className="text-[10px] font-semibold">Diagnose</span>
-        </NavLink>
-        <NavLink 
-          to="/rotation" 
-          className={({ isActive }) => 
-            `flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? 'text-green-700' : 'text-stone-400 hover:text-stone-600'}`
-          }
-        >
-          <Icons.Recycle size={22} />
-          <span className="text-[10px] font-semibold">Rotation</span>
-        </NavLink>
-        <NavLink 
-          to="/tracker" 
-          className={({ isActive }) => 
-            `flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? 'text-green-700' : 'text-stone-400 hover:text-stone-600'}`
-          }
-        >
-          <Icons.LineChart size={22} />
-          <span className="text-[10px] font-semibold">Tracker</span>
-        </NavLink>
-        <NavLink 
-          to="/expenses" 
-          className={({ isActive }) => 
-            `flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? 'text-green-700' : 'text-stone-400 hover:text-stone-600'}`
-          }
-        >
-          <Icons.Wallet size={22} />
-          <span className="text-[10px] font-semibold">{t('nav_expenses' as any) || 'Expenses'}</span>
-        </NavLink>
-      </div>
-    </nav>
+    <>
+      {showMore && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={() => setShowMore(false)}
+        />
+      )}
+      {showMore && (
+        <div className="fixed bottom-16 right-0 m-4 w-48 bg-white rounded-2xl shadow-xl border border-stone-200 p-2 z-50 animate-in fade-in slide-in-from-bottom-4">
+          <NavLink 
+            to="/rotation" 
+            onClick={() => setShowMore(false)}
+            className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-green-50 text-green-700 font-bold' : 'text-stone-600 hover:bg-stone-50'}`}
+          >
+            <Icons.Recycle size={20} />
+            <span className="text-sm">Rotation</span>
+          </NavLink>
+          <NavLink 
+            to="/expenses" 
+            onClick={() => setShowMore(false)}
+            className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-green-50 text-green-700 font-bold' : 'text-stone-600 hover:bg-stone-50'}`}
+          >
+            <Icons.Wallet size={20} />
+            <span className="text-sm">{t('nav_expenses' as any) || 'Expenses'}</span>
+          </NavLink>
+          
+          <div className="my-2 border-t border-stone-100" />
+          <div className="px-3 py-1 text-[10px] font-bold text-stone-400 uppercase tracking-wider">Future Extensions</div>
+          
+          <div className="flex items-center gap-3 p-3 rounded-xl text-stone-400 opacity-60 cursor-not-allowed">
+            <Icons.TrendingUp size={20} />
+            <span className="text-sm">Market Prices</span>
+          </div>
+          <div className="flex items-center gap-3 p-3 rounded-xl text-stone-400 opacity-60 cursor-not-allowed">
+            <Icons.Users size={20} />
+            <span className="text-sm">Community Forum</span>
+          </div>
+          <div className="flex items-center gap-3 p-3 rounded-xl text-stone-400 opacity-60 cursor-not-allowed">
+            <Icons.FileText size={20} />
+            <span className="text-sm">Govt Schemes</span>
+          </div>
+        </div>
+      )}
+
+      <nav className="fixed bottom-0 left-0 right-0 max-w-7xl mx-auto bg-white border-t border-stone-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-safe z-50">
+        <div className="flex justify-around items-center h-16">
+          <NavLink 
+            to="/" 
+            className={({ isActive }) => 
+              `flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? 'text-green-700' : 'text-stone-400 hover:text-stone-600'}`
+            }
+          >
+            <Icons.Home size={22} />
+            <span className="text-[10px] font-semibold">{t('nav_home')}</span>
+          </NavLink>
+          <NavLink 
+            to="/sow" 
+            className={({ isActive }) => 
+              `flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? 'text-green-700' : 'text-stone-400 hover:text-stone-600'}`
+            }
+          >
+            <Icons.Sprout size={22} />
+            <span className="text-[10px] font-semibold">{t('nav_sow')}</span>
+          </NavLink>
+          <NavLink 
+            to="/tracker" 
+            className={({ isActive }) => 
+              `flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? 'text-green-700' : 'text-stone-400 hover:text-stone-600'}`
+            }
+          >
+            <Icons.LineChart size={22} />
+            <span className="text-[10px] font-semibold">Tracker</span>
+          </NavLink>
+          <NavLink 
+            to="/diagnose" 
+            className={({ isActive }) => 
+              `flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? 'text-green-700' : 'text-stone-400 hover:text-stone-600'}`
+            }
+          >
+            <Icons.ScanSearch size={22} />
+            <span className="text-[10px] font-semibold">Diagnose</span>
+          </NavLink>
+          <button 
+            onClick={() => setShowMore(!showMore)}
+            className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${showMore ? 'text-green-700' : 'text-stone-400 hover:text-stone-600'}`}
+          >
+            <Icons.Menu size={22} />
+            <span className="text-[10px] font-semibold">More</span>
+          </button>
+        </div>
+      </nav>
+    </>
   );
 }
 
