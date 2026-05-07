@@ -13,6 +13,7 @@ export default function Home() {
   const { generateContent } = useAI();
   const navigate = useNavigate();
   const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [locationName, setLocationName] = useState<string>('');
   const [expanded, setExpanded] = useState(false);
   const [aiGreeting, setAiGreeting] = useState<string>('');
   const [showSettings, setShowSettings] = useState(false);
@@ -25,13 +26,22 @@ export default function Home() {
         async (position) => {
           const w = await fetchWeather(position.coords.latitude, position.coords.longitude);
           setWeather(w);
+          try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}&zoom=12`);
+            const geo = await res.json();
+            if (geo && geo.address) {
+              const localArea = geo.address.suburb || geo.address.village || geo.address.town || geo.address.city || geo.address.county || geo.address.state_district;
+              if (localArea) setLocationName(localArea);
+            }
+          } catch(e) {}
         },
         async (error) => {
           console.warn("Geolocation denied or failed, using default", error);
           const w = await fetchWeather(23.0, 79.0);
           setWeather(w);
+          setLocationName('Central India');
         },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
       );
     } else {
       fetchWeather(23.0, 79.0).then(setWeather);
@@ -142,7 +152,10 @@ export default function Home() {
             <div className="flex items-center gap-4">
               {renderIcon(weather.iconName)}
               <div>
-                <div className={`text-3xl font-bold ${weather.isDay ? 'text-stone-800' : 'text-white'}`}>{weather.temp}°C</div>
+                <div className={`text-3xl font-bold flex items-center gap-2 ${weather.isDay ? 'text-stone-800' : 'text-white'}`}>
+                   {weather.temp}°C
+                   {locationName && <span className={`text-sm px-2 py-1 rounded-lg border flex items-center gap-1 font-bold ${weather.isDay ? 'bg-white border-stone-200 text-stone-600' : 'bg-white/10 border-white/20 text-indigo-100'}`}><Icons.MapPin size={10} /> {locationName}</span>}
+                </div>
                 <div className={`text-sm mt-1 font-medium ${weather.isDay ? 'text-stone-500' : 'text-indigo-200'}`}>
                   {weather.condition === 'good' ? t('weather_good_sowing') : t('weather_rain_likely')}
                 </div>
@@ -239,31 +252,51 @@ export default function Home() {
         </div>
       )}
 
-      {/* Widgets Area */}
-      <h3 className="font-bold text-lg text-stone-800 mt-8 mb-4">Farm Overview</h3>
-      <div className="grid grid-cols-2 gap-4">
-        {/* Quick Action Widget */}
-        <div 
-          onClick={() => navigate('/diagnose')}
-          className="bg-green-700 rounded-3xl p-5 text-white shadow-sm cursor-pointer hover:bg-green-800 transition"
-        >
-          <div className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center mb-3">
-             <Icons.ScanSearch size={22} className="text-white" />
+      {/* Primary Actions */}
+      <div 
+        onClick={() => navigate('/diagnose')}
+        className="mt-8 bg-green-700 rounded-[2rem] p-6 text-white shadow-sm flex items-center justify-between cursor-pointer hover:bg-green-800 transition relative overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
+            <Icons.ScanSearch size={32} />
           </div>
-          <div className="font-bold">Scan Plant</div>
-          <div className="text-xs text-green-100 mt-1">Instant disease diagnosis</div>
+          <div>
+            <h3 className="font-bold text-lg">Scan & Diagnose</h3>
+            <p className="text-xs text-green-100">AI-powered disease detection</p>
+          </div>
+        </div>
+        <Icons.ChevronRight className="text-green-300 relative z-10" />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 mt-4">
+        {/* Market Widget */}
+        <div 
+          onClick={() => navigate('/market')}
+          className="bg-indigo-600 rounded-[2rem] p-5 text-white shadow-sm cursor-pointer hover:bg-indigo-700 transition relative overflow-hidden"
+        >
+          <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center mb-3">
+             <Icons.TrendingUp size={22} className="text-white" />
+          </div>
+          <div className="font-bold text-sm tracking-tight">{t('nav_market')}</div>
+          <div className="text-[10px] text-indigo-100 mt-1 flex items-center gap-1 font-medium">
+            Live Mandi rates <Icons.ArrowUpRight size={10} />
+          </div>
         </div>
         
-        {/* Quick Action Widget 2 */}
+        {/* Suggestion Widget */}
         <div 
           onClick={() => navigate('/sow')}
-          className="bg-amber-500 rounded-3xl p-5 text-white shadow-sm cursor-pointer hover:bg-amber-600 transition"
+          className="bg-amber-500 rounded-[2rem] p-5 text-white shadow-sm cursor-pointer hover:bg-amber-600 transition relative overflow-hidden"
         >
-          <div className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center mb-3">
+          <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center mb-3">
              <Icons.Sprout size={22} className="text-white" />
           </div>
-          <div className="font-bold">What to Grow?</div>
-          <div className="text-xs text-amber-100 mt-1">AI suggestions</div>
+          <div className="font-bold text-sm tracking-tight">What to Grow?</div>
+          <div className="text-[10px] text-amber-100 mt-1 flex items-center gap-1 font-medium">
+            AI recommendations <Icons.Sparkles size={10} />
+          </div>
         </div>
       </div>
 

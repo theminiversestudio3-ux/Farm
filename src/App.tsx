@@ -8,6 +8,10 @@ import Expenses from './pages/Expenses';
 import DiseaseFinder from './pages/DiseaseFinder';
 import Rotation from './pages/Rotation';
 import GrowthTracker from './pages/GrowthTracker';
+import MarketPrices from './pages/MarketPrices';
+import Community from './pages/Community';
+import Schemes from './pages/Schemes';
+import Expert from './pages/Expert';
 import { useState, useEffect } from 'react';
 import * as Icons from 'lucide-react';
 
@@ -43,20 +47,40 @@ function BottomNav() {
           </NavLink>
           
           <div className="my-2 border-t border-stone-100" />
-          <div className="px-3 py-1 text-[10px] font-bold text-stone-400 uppercase tracking-wider">Future Extensions</div>
+          <div className="px-3 py-1 text-[10px] font-bold text-stone-400 uppercase tracking-wider">Services</div>
           
-          <div className="flex items-center gap-3 p-3 rounded-xl text-stone-400 opacity-60 cursor-not-allowed">
+          <NavLink 
+            to="/market" 
+            onClick={() => setShowMore(false)}
+            className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-green-50 text-green-700 font-bold' : 'text-stone-600 hover:bg-stone-50'}`}
+          >
             <Icons.TrendingUp size={20} />
-            <span className="text-sm">Market Prices</span>
-          </div>
-          <div className="flex items-center gap-3 p-3 rounded-xl text-stone-400 opacity-60 cursor-not-allowed">
+            <span className="text-sm">{t('nav_market') || 'Market Prices'}</span>
+          </NavLink>
+          <NavLink 
+            to="/community" 
+            onClick={() => setShowMore(false)}
+            className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-green-50 text-green-700 font-bold' : 'text-stone-600 hover:bg-stone-50'}`}
+          >
             <Icons.Users size={20} />
-            <span className="text-sm">Community Forum</span>
-          </div>
-          <div className="flex items-center gap-3 p-3 rounded-xl text-stone-400 opacity-60 cursor-not-allowed">
-            <Icons.FileText size={20} />
+            <span className="text-sm">Community</span>
+          </NavLink>
+          <NavLink 
+            to="/schemes" 
+            onClick={() => setShowMore(false)}
+            className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-green-50 text-green-700 font-bold' : 'text-stone-600 hover:bg-stone-50'}`}
+          >
+            <Icons.Landmark size={20} />
             <span className="text-sm">Govt Schemes</span>
-          </div>
+          </NavLink>
+          <NavLink 
+            to="/expert" 
+            onClick={() => setShowMore(false)}
+            className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-green-50 text-green-700 font-bold' : 'text-stone-600 hover:bg-stone-50'}`}
+          >
+            <Icons.PhoneCall size={20} />
+            <span className="text-sm">Ask Expert</span>
+          </NavLink>
         </div>
       )}
 
@@ -147,6 +171,10 @@ function AppContent() {
         <Route path="/diagnose" element={<DiseaseFinder />} />
         <Route path="/rotation" element={<Rotation />} />
         <Route path="/tracker" element={<GrowthTracker />} />
+        <Route path="/market" element={<MarketPrices />} />
+        <Route path="/community" element={<Community />} />
+        <Route path="/schemes" element={<Schemes />} />
+        <Route path="/expert" element={<Expert />} />
       </Routes>
       <BottomNav />
     </div>
