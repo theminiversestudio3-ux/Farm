@@ -71,7 +71,8 @@ Based on the region's climate, the short-term weather forecast, the specified so
         async (error) => {
           console.warn("Geolocation denied or failed, using default (Central India)", error);
           await fetchSuggestions(23.0, 79.0, soilType); // Default approximation
-        }
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
       );
     } else {
       fetchSuggestions(23.0, 79.0, soilType);

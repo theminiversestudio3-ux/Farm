@@ -30,7 +30,8 @@ export default function Home() {
           console.warn("Geolocation denied or failed, using default", error);
           const w = await fetchWeather(23.0, 79.0);
           setWeather(w);
-        }
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
       );
     } else {
       fetchWeather(23.0, 79.0).then(setWeather);
@@ -71,9 +72,10 @@ export default function Home() {
     fetchGreeting();
   }, [lang]);
 
-  const renderIcon = (name: string, size: number = 48) => {
+  const renderIcon = (name: string, size: number = 48, customColor?: string) => {
     const IconComponent = (Icons as any)[name] || Icons.CloudSun;
-    return <IconComponent size={size} className="text-amber-500" />;
+    const defaultColor = weather?.isDay ? "text-amber-500" : "text-indigo-400";
+    return <IconComponent size={size} className={customColor || defaultColor} />;
   };
 
   return (
@@ -136,21 +138,21 @@ export default function Home() {
           onClick={() => setExpanded(!expanded)}
           className="bg-white rounded-[2rem] shadow-sm border border-stone-200 overflow-hidden cursor-pointer relative z-10"
         >
-          <div className="p-5 flex items-center justify-between bg-gradient-to-br from-stone-50 to-stone-100">
+          <div className={`p-5 flex items-center justify-between transition-colors duration-500 ${weather.isDay ? 'bg-gradient-to-br from-blue-50 to-amber-50' : 'bg-gradient-to-br from-slate-800 to-indigo-900'}`}>
             <div className="flex items-center gap-4">
               {renderIcon(weather.iconName)}
               <div>
-                <div className="text-3xl font-bold text-stone-800">{weather.temp}°C</div>
-                <div className="text-stone-500 text-sm mt-1 font-medium">
+                <div className={`text-3xl font-bold ${weather.isDay ? 'text-stone-800' : 'text-white'}`}>{weather.temp}°C</div>
+                <div className={`text-sm mt-1 font-medium ${weather.isDay ? 'text-stone-500' : 'text-indigo-200'}`}>
                   {weather.condition === 'good' ? t('weather_good_sowing') : t('weather_rain_likely')}
                 </div>
               </div>
             </div>
             <div className="text-right">
-              <div className="text-stone-500 text-sm flex items-center justify-end gap-1 font-bold">
+              <div className={`text-sm flex items-center justify-end gap-1 font-bold ${weather.isDay ? 'text-stone-500' : 'text-indigo-100'}`}>
                  <Icons.Droplets size={14} className="text-blue-400" /> {weather.humidity}%
               </div>
-              <div className="text-stone-400 text-xs mt-1">Forecast</div>
+              <div className={`text-xs mt-1 ${weather.isDay ? 'text-stone-400' : 'text-indigo-300 opacity-70'}`}>Forecast</div>
             </div>
           </div>
 
@@ -162,20 +164,66 @@ export default function Home() {
                 exit={{ height: 0, opacity: 0 }}
                 className="border-t border-stone-200"
               >
-                <div className="p-4 bg-stone-50">
-                  <h3 className="font-semibold text-stone-700 mb-3 text-sm">{t('forecast_7_day')}</h3>
+                <div className={`p-4 ${weather.isDay ? 'bg-stone-50' : 'bg-slate-900'}`}>
+                  {/* Expanded Weather Details */}
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
+                      <Icons.Wind size={18} className="text-stone-400" />
+                      <div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">Wind</div>
+                        <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.windSpeed} km/h</div>
+                      </div>
+                    </div>
+                    <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
+                      <Icons.Sun size={18} className="text-amber-500" />
+                      <div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">UV Index</div>
+                        <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.uvIndex}</div>
+                      </div>
+                    </div>
+                    <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
+                      <Icons.Eye size={18} className="text-blue-400" />
+                      <div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">Visibility</div>
+                        <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.visibility} km</div>
+                      </div>
+                    </div>
+                    <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
+                      <Icons.Gauge size={18} className="text-emerald-400" />
+                      <div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">Pressure</div>
+                        <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.pressure} hPa</div>
+                      </div>
+                    </div>
+                    <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
+                      <Icons.Sunrise size={18} className="text-amber-400" />
+                      <div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">Sunrise</div>
+                        <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.sunrise}</div>
+                      </div>
+                    </div>
+                    <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
+                      <Icons.Sunset size={18} className="text-orange-400" />
+                      <div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">Sunset</div>
+                        <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.sunset}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h3 className={`font-semibold mb-3 text-sm ${weather.isDay ? 'text-stone-700' : 'text-indigo-200'}`}>{t('forecast_7_day')}</h3>
                   <div className="space-y-3">
                     {weather.forecast.map((fc, i) => (
                       <div key={i} className="flex items-center justify-between text-sm">
-                        <span className="w-20 text-stone-600 font-medium">{fc.day}</span>
+                        <span className={`w-20 font-medium ${weather.isDay ? 'text-stone-600' : 'text-indigo-300'}`}>{fc.day}</span>
                         <div className="w-8 flex justify-center">
                           {renderIcon(fc.iconName, 20)}
                         </div>
-                        <span className="w-16 text-right text-stone-500 flex items-center justify-end gap-1">
+                        <span className={`w-16 text-right flex items-center justify-end gap-1 ${weather.isDay ? 'text-stone-500' : 'text-indigo-400'}`}>
                           {fc.rainProb}% <Icons.CloudRain size={14} className="text-blue-400" />
                         </span>
-                        <span className="w-20 text-right font-bold text-stone-700">
-                          {fc.high}° <span className="text-stone-400 font-normal">/ {fc.low}°</span>
+                        <span className={`w-20 text-right font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>
+                          {fc.high}° <span className={`font-normal ${weather.isDay ? 'text-stone-400' : 'text-indigo-700'}`}>/ {fc.low}°</span>
                         </span>
                       </div>
                     ))}
