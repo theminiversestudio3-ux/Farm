@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAI } from '../context/ModelContext';
 import { appStore, useAppStore } from '../store/appStore';
@@ -21,7 +21,7 @@ export default function DiseaseFinder() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [history, setHistory] = useState<DiagnosisHistory[]>([]);
   const [showHistory, setShowHistory] = useState(false);
-  const [showTrackerPopup, setShowTrackerPopup] = useState(false);
+  const [savedToTracker, setSavedToTracker] = useState(false);
   const [activeLogs, setActiveLogs] = useState<any[]>([]);
 
   useEffect(() => {
@@ -142,7 +142,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
       }, ...history].slice(0, 5)); // Keep last 5
 
       if (activeLogs.length > 0) {
-        setShowTrackerPopup(true);
+        setSavedToTracker(false);
       }
 
     } catch (e: any) {
@@ -368,6 +368,58 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                        </ul>
                     </div>
                   )}
+                  {/* Link to Tracker */}
+                  {activeLogs.length > 0 && !savedToTracker && (
+                    <div className="mt-8 pt-6 border-t border-stone-100">
+                       <h5 className="font-bold text-stone-800 mb-3 flex items-center gap-2">
+                         <Icons.Sprout size={18} className="text-green-600" /> Save to Tracker?
+                       </h5>
+                       <p className="text-sm text-stone-500 mb-4">Is this diagnosis for one of your active crops?</p>
+                       <div className="grid gap-2">
+                         {activeLogs.map(log => {
+                           const crop = crops.find(c => c.id === log.cropId);
+                           return (
+                             <button 
+                               key={log.id}
+                               onClick={() => {
+                                 const savedLogsStr = localStorage.getItem('farm_growth_logs');
+                                 if (savedLogsStr) {
+                                   try {
+                                     const savedLogs = JSON.parse(savedLogsStr);
+                                     const logIndex = savedLogs.findIndex((l: any) => l.id === log.id);
+                                     if (logIndex !== -1) {
+                                       if (!savedLogs[logIndex].notes) savedLogs[logIndex].notes = [];
+                                       savedLogs[logIndex].notes.push(`Diagnosed with: ${data.diseaseName}`);
+                                       localStorage.setItem('farm_growth_logs', JSON.stringify(savedLogs));
+                                       setSavedToTracker(true);
+                                     }
+                                   } catch(e) {}
+                                 }
+                               }}
+                               className="w-full bg-white border border-stone-200 rounded-xl p-3 flex items-center gap-3 hover:border-green-400 hover:bg-green-50 transition text-left shadow-sm"
+                             >
+                               <div className="bg-green-100 p-2 rounded-lg text-green-700">
+                                 <Icons.Leaf size={20} />
+                               </div>
+                               <div className="flex-1">
+                                 <div className="font-bold text-stone-800 text-sm">{crop?.name || 'Crop'}</div>
+                                 <div className="text-[10px] text-stone-500 font-medium">Planted: {new Date(log.sowingDate).toLocaleDateString()}</div>
+                               </div>
+                               <Icons.Plus size={18} className="text-stone-400" />
+                             </button>
+                           )
+                         })}
+                       </div>
+                    </div>
+                  )}
+
+                  {savedToTracker && (
+                    <div className="mt-8 pt-6 border-t border-stone-100">
+                      <div className="bg-green-50 text-green-800 text-sm font-bold p-3 rounded-xl flex items-center gap-2 justify-center">
+                        <Icons.CheckCircle size={18} /> Saved to Tracker
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             } catch (err) {
@@ -382,65 +434,6 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
         </motion.div>
       )}
 
-      {/* Tracker Link Popup */}
-      <AnimatePresence>
-        {showTrackerPopup && activeLogs.length > 0 && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
-             <motion.div 
-               initial={{ scale: 0.9, opacity: 0 }}
-               animate={{ scale: 1, opacity: 1 }}
-               exit={{ scale: 0.9, opacity: 0 }}
-               className="bg-white rounded-[2rem] p-6 shadow-xl max-w-sm w-full border border-stone-200"
-             >
-               <h3 className="font-bold text-xl mb-2 text-stone-800 flex items-center gap-2">
-                 <Icons.Sprout className="text-green-600" /> Save to Tracker?
-               </h3>
-               <p className="text-sm text-stone-600 mb-5">Is this diagnosis for one of your active crops?</p>
-               <div className="space-y-3 mb-5 max-h-[40vh] overflow-y-auto hide-scrollbar">
-                  {activeLogs.map(log => {
-                     const crop = crops.find(c => c.id === log.cropId);
-                     return (
-                       <button 
-                         key={log.id} 
-                         onClick={() => {
-                           const savedLogsStr = localStorage.getItem('farm_growth_logs');
-                           if (savedLogsStr) {
-                             try {
-                               const savedLogs = JSON.parse(savedLogsStr);
-                               const logIndex = savedLogs.findIndex((l: any) => l.id === log.id);
-                               if (logIndex !== -1) {
-                                 const parsedDx = JSON.parse(store.disease.data as string);
-                                 if (!savedLogs[logIndex].notes) savedLogs[logIndex].notes = [];
-                                 savedLogs[logIndex].notes.push(`Diagnosed with: ${parsedDx.diseaseName}`);
-                                 localStorage.setItem('farm_growth_logs', JSON.stringify(savedLogs));
-                               }
-                             } catch(e) {}
-                           }
-                           setShowTrackerPopup(false);
-                         }}
-                         className="w-full p-4 rounded-2xl border border-stone-200 text-left hover:border-green-400 hover:bg-green-50 flex items-center gap-4 transition"
-                       >
-                         <div className="bg-green-100 p-2.5 rounded-xl text-green-700 shadow-inner">
-                           <Icons.Leaf size={24} />
-                         </div>
-                         <div className="flex-1">
-                           <div className="font-bold text-stone-800 text-lg">{crop?.name || 'Crop'}</div>
-                           <div className="text-xs text-stone-500 font-medium">
-                             Planted: {new Date(log.sowingDate).toLocaleDateString()}
-                           </div>
-                         </div>
-                         <Icons.ChevronRight size={18} className="text-stone-300" />
-                       </button>
-                     )
-                  })}
-               </div>
-               <button onClick={() => setShowTrackerPopup(false)} className="w-full p-3 rounded-xl text-stone-500 font-bold hover:bg-stone-50 hover:text-stone-700 transition">
-                 No, skip
-               </button>
-             </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
