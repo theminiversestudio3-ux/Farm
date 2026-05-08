@@ -390,6 +390,10 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                                      if (logIndex !== -1) {
                                        if (!savedLogs[logIndex].notes) savedLogs[logIndex].notes = [];
                                        savedLogs[logIndex].notes.push(`Diagnosed with: ${data.diseaseName}`);
+                                       
+                                       const healthStatus = data.diseaseName === 'Healthy' ? 'Healthy' : data.severity === 'High' ? 'Critical' : 'Warning';
+                                       savedLogs[logIndex].healthStatus = healthStatus;
+
                                        localStorage.setItem('farm_growth_logs', JSON.stringify(savedLogs));
                                        setSavedToTracker(true);
                                      }

@@ -15,6 +15,7 @@ interface GrowthLog {
   mode?: 'test' | 'real';
   createdAt?: number;
   analysis?: string;
+  healthStatus?: 'Healthy' | 'Warning' | 'Critical';
 }
 
 const STAGES = ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Harvesting'];
@@ -262,7 +263,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
           const harvestDate = new Date(harvestDateMs).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 
           return (
-            <div key={log.id} className="bg-white rounded-[2rem] p-5 shadow-sm border border-stone-200 overflow-hidden relative">
+             <div key={log.id} className="bg-white rounded-[2rem] p-5 shadow-sm border border-stone-200 overflow-hidden relative">
               {log.mode === 'test' && (
                 <div className="absolute top-0 right-0 bg-stone-100 text-stone-500 text-[9px] uppercase font-bold px-3 py-1 rounded-bl-xl border-l border-b border-stone-200">
                   Simulation (Test)
@@ -277,6 +278,15 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                   <div>
                     <h3 className="font-bold text-stone-800 text-lg flex items-center gap-2">
                       {crop?.name}
+                      {log.healthStatus && (
+                        <span className={`text-[10px] px-2 py-0.5 rounded-md uppercase font-bold tracking-wider ${
+                          log.healthStatus === 'Healthy' ? 'bg-green-100 text-green-700' :
+                          log.healthStatus === 'Warning' ? 'bg-amber-100 text-amber-700' :
+                          'bg-red-100 text-red-700'
+                        }`}>
+                          {log.healthStatus}
+                        </span>
+                      )}
                     </h3>
                     <div className="text-xs text-stone-500 flex items-center gap-1.5 mt-0.5">
                        <Icons.MapPin size={12} className="opacity-70" /> {log.landArea}
@@ -291,7 +301,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
               </div>
 
               {/* Progress Bar & Real-time Stats */}
-              <div className="bg-stone-50 rounded-2xl p-4 mb-5 border border-stone-100 shadow-inner">
+              <div className="bg-stone-50 rounded-2xl p-4 mb-4 border border-stone-100 shadow-inner">
                  <div className="flex justify-between items-end mb-2">
                     <div>
                       <div className="text-[10px] uppercase font-bold text-green-600 tracking-wider mb-1">Current Stage</div>
@@ -326,6 +336,23 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                    Expected Harvest: {harvestDate}
                  </div>
               </div>
+
+              {/* Log Notes / Diagnosis History */}
+              {log.notes && log.notes.length > 1 && (
+                 <div className="mb-4">
+                    <div className="text-xs font-semibold text-stone-500 mb-2 flex items-center gap-1.5">
+                       <Icons.FileText size={14} /> History & Diagnoses
+                    </div>
+                    <div className="space-y-1">
+                      {log.notes.slice(-3).map((note, i) => (
+                        <div key={i} className="text-xs text-stone-600 bg-stone-50 p-2 rounded-lg border border-stone-100">
+                           {note.includes('Diagnosed with:') ? <Icons.Stethoscope size={12} className="inline mr-1 text-indigo-500" /> : <Icons.Sprout size={12} className="inline mr-1 text-green-500" />}
+                           {note}
+                        </div>
+                      ))}
+                    </div>
+                 </div>
+              )}
 
               {/* Mini Manual Stage Override */}
               <div className="mb-5">

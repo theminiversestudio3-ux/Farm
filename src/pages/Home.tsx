@@ -368,9 +368,18 @@ export default function Home() {
                          <Icons.Sprout size={24} />
                        </div>
                        <div>
-                         <div className="font-bold text-stone-800 flex items-center gap-2">
+                         <div className="font-bold text-stone-800 flex items-center gap-2 flex-wrap">
                            {crop?.name || 'Unknown'} 
                            {log.mode === 'test' && <span className="bg-stone-100 text-stone-400 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider font-bold">Test</span>}
+                           {(log as any).healthStatus && (
+                             <span className={`text-[9px] px-1.5 py-0.5 rounded-md uppercase font-bold tracking-wider ${
+                               (log as any).healthStatus === 'Healthy' ? 'bg-green-100 text-green-700' :
+                               (log as any).healthStatus === 'Warning' ? 'bg-amber-100 text-amber-700' :
+                               'bg-red-100 text-red-700'
+                             }`}>
+                               {(log as any).healthStatus}
+                             </span>
+                           )}
                          </div>
                          <div className="text-xs text-stone-500 mt-0.5 flex items-center gap-1 font-medium">
                            <Icons.Calendar size={12}/> Planted: {new Date(log.sowingDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}
