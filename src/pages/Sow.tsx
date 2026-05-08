@@ -152,7 +152,7 @@ Based on the region's climate, the short-term weather forecast, the specified so
                   {renderIcon(crop.iconName, 32)}
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-bold text-stone-800">{crop.name}</h4>
+                  <h4 className="font-bold text-stone-800">{(t as any)(crop.id) || crop.name}</h4>
                   <p className="text-sm text-green-700 font-medium">
                     {t('profit_per_acre')}{crop.profitPerAcre.toLocaleString('en-IN')}
                   </p>
@@ -179,7 +179,7 @@ Based on the region's climate, the short-term weather forecast, the specified so
               className="bg-white border border-stone-200 p-4 rounded-xl shadow-sm text-center hover:border-green-400 hover:bg-green-50 transition-colors flex flex-col items-center justify-center"
             >
               <div className="mb-2">{renderIcon(crop.iconName, 32)}</div>
-              <div className="font-medium text-stone-800 text-sm">{crop.name}</div>
+              <div className="font-medium text-stone-800 text-sm">{(t as any)(crop.id) || crop.name}</div>
             </button>
           ))}
         </div>

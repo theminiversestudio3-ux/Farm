@@ -122,13 +122,13 @@ export default function Home() {
                     <Icons.Globe size={16} className="text-stone-500" /> Language
                   </div>
                   <div className="p-2 space-y-1">
-                    {(['en', 'hi', 'mr'] as const).map(l => (
+                    {(['en', 'hi', 'mr', 'bn'] as const).map(l => (
                       <button
                         key={l}
                         onClick={() => { setLang(l); setShowSettings(false); }}
                         className={`w-full text-left px-3 py-2 rounded-xl text-sm font-bold transition-all ${lang === l ? 'bg-green-100 text-green-800' : 'text-stone-600 hover:bg-stone-50'}`}
                       >
-                        {l === 'en' ? 'English' : l === 'hi' ? 'हिंदी' : 'मराठी'}
+                        {l === 'en' ? 'English' : l === 'hi' ? 'हिंदी' : l === 'bn' ? 'বাংলা' : 'मराठी'}
                       </button>
                     ))}
                   </div>
@@ -165,7 +165,7 @@ export default function Home() {
               <div className={`text-sm flex items-center justify-end gap-1 font-bold ${weather.isDay ? 'text-stone-500' : 'text-indigo-100'}`}>
                  <Icons.Droplets size={14} className="text-blue-400" /> {weather.humidity}%
               </div>
-              <div className={`text-xs mt-1 ${weather.isDay ? 'text-stone-400' : 'text-indigo-300 opacity-70'}`}>Forecast</div>
+              <div className={`text-xs mt-1 ${weather.isDay ? 'text-stone-400' : 'text-indigo-300 opacity-70'}`}>{(t as any)('forecast') || 'Forecast'}</div>
             </div>
           </div>
 
@@ -183,42 +183,42 @@ export default function Home() {
                     <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
                       <Icons.Wind size={18} className="text-stone-400" />
                       <div>
-                        <div className="text-[10px] uppercase font-bold text-stone-400">Wind</div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">{(t as any)('wind') || 'Wind'}</div>
                         <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.windSpeed} km/h</div>
                       </div>
                     </div>
                     <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
                       <Icons.Sun size={18} className="text-amber-500" />
                       <div>
-                        <div className="text-[10px] uppercase font-bold text-stone-400">UV Index</div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">{(t as any)('uv_index') || 'UV Index'}</div>
                         <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.uvIndex}</div>
                       </div>
                     </div>
                     <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
                       <Icons.Eye size={18} className="text-blue-400" />
                       <div>
-                        <div className="text-[10px] uppercase font-bold text-stone-400">Visibility</div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">{(t as any)('visibility') || 'Visibility'}</div>
                         <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.visibility} km</div>
                       </div>
                     </div>
                     <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
                       <Icons.Gauge size={18} className="text-emerald-400" />
                       <div>
-                        <div className="text-[10px] uppercase font-bold text-stone-400">Pressure</div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">{(t as any)('pressure') || 'Pressure'}</div>
                         <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.pressure} hPa</div>
                       </div>
                     </div>
                     <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
                       <Icons.Sunrise size={18} className="text-amber-400" />
                       <div>
-                        <div className="text-[10px] uppercase font-bold text-stone-400">Sunrise</div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">{(t as any)('sunrise') || 'Sunrise'}</div>
                         <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.sunrise}</div>
                       </div>
                     </div>
                     <div className={`p-3 rounded-2xl flex items-center gap-3 ${weather.isDay ? 'bg-white border border-stone-100' : 'bg-white/5 border border-white/10'}`}>
                       <Icons.Sunset size={18} className="text-orange-400" />
                       <div>
-                        <div className="text-[10px] uppercase font-bold text-stone-400">Sunset</div>
+                        <div className="text-[10px] uppercase font-bold text-stone-400">{(t as any)('sunset') || 'Sunset'}</div>
                         <div className={`text-sm font-bold ${weather.isDay ? 'text-stone-700' : 'text-indigo-50'}`}>{weather.sunset}</div>
                       </div>
                     </div>
@@ -263,8 +263,8 @@ export default function Home() {
             <Icons.ScanSearch size={32} />
           </div>
           <div>
-            <h3 className="font-bold text-lg">Scan & Diagnose</h3>
-            <p className="text-xs text-green-100">AI-powered disease detection</p>
+            <h3 className="font-bold text-lg">{(t as any)('scan_diagnose') || 'Scan & Diagnose'}</h3>
+            <p className="text-xs text-green-100">{(t as any)('ai_disease_detection') || 'AI-powered disease detection'}</p>
           </div>
         </div>
         <Icons.ChevronRight className="text-green-300 relative z-10" />
@@ -281,7 +281,7 @@ export default function Home() {
           </div>
           <div className="font-bold text-sm tracking-tight">{t('nav_market')}</div>
           <div className="text-[10px] text-indigo-100 mt-1 flex items-center gap-1 font-medium">
-            Live Mandi rates <Icons.ArrowUpRight size={10} />
+            {(t as any)('live_mandi_rates') || 'Live Mandi rates'} <Icons.ArrowUpRight size={10} />
           </div>
         </div>
         
@@ -293,9 +293,9 @@ export default function Home() {
           <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center mb-3">
              <Icons.Sprout size={22} className="text-white" />
           </div>
-          <div className="font-bold text-sm tracking-tight">What to Grow?</div>
+          <div className="font-bold text-sm tracking-tight">{(t as any)('what_to_grow') || 'What to Grow?'}</div>
           <div className="text-[10px] text-amber-100 mt-1 flex items-center gap-1 font-medium">
-            AI recommendations <Icons.Sparkles size={10} />
+            {(t as any)('ai_recommendations') || 'AI recommendations'} <Icons.Sparkles size={10} />
           </div>
         </div>
       </div>
@@ -303,9 +303,9 @@ export default function Home() {
       {recentDiagnosis && (
         <div className="mt-6">
           <div className="flex items-center justify-between mb-4">
-             <h3 className="font-bold text-lg text-stone-800">Diagnosis History</h3>
+             <h3 className="font-bold text-lg text-stone-800">{(t as any)('diagnosis_history') || 'Diagnosis History'}</h3>
              <button onClick={() => navigate('/diagnose')} className="text-sm font-bold text-green-700 flex items-center gap-1">
-               Open <Icons.ChevronRight size={16} />
+               {(t as any)('open') || 'Open'} <Icons.ChevronRight size={16} />
              </button>
           </div>
           <div onClick={() => {
@@ -337,9 +337,9 @@ export default function Home() {
       {activeLogs.length > 0 && (
         <div className="mt-6">
           <div className="flex items-center justify-between mb-4">
-             <h3 className="font-bold text-lg text-stone-800">Growth Progress</h3>
+             <h3 className="font-bold text-lg text-stone-800">{(t as any)('growth_progress') || 'Growth Progress'}</h3>
              <button onClick={() => navigate('/tracker')} className="text-sm font-bold text-green-700 flex items-center gap-1">
-               See All <Icons.ChevronRight size={16} />
+               {(t as any)('see_all') || 'See All'} <Icons.ChevronRight size={16} />
              </button>
           </div>
           <div className="space-y-4">
@@ -369,8 +369,8 @@ export default function Home() {
                        </div>
                        <div>
                          <div className="font-bold text-stone-800 flex items-center gap-2 flex-wrap">
-                           {crop?.name || 'Unknown'} 
-                           {log.mode === 'test' && <span className="bg-stone-100 text-stone-400 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider font-bold">Test</span>}
+                           {crop ? ((t as any)(crop.id) || crop.name) : ((t as any)('unknown') || 'Unknown')} 
+                           {log.mode === 'test' && <span className="bg-stone-100 text-stone-400 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider font-bold">{(t as any)('test') || 'Test'}</span>}
                            {(log as any).healthStatus && (
                              <span className={`text-[9px] px-1.5 py-0.5 rounded-md uppercase font-bold tracking-wider ${
                                (log as any).healthStatus === 'Healthy' ? 'bg-green-100 text-green-700' :
@@ -382,7 +382,7 @@ export default function Home() {
                            )}
                          </div>
                          <div className="text-xs text-stone-500 mt-0.5 flex items-center gap-1 font-medium">
-                           <Icons.Calendar size={12}/> Planted: {new Date(log.sowingDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}
+                           <Icons.Calendar size={12}/> {(t as any)('planted') || 'Planted:'} {new Date(log.sowingDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}
                          </div>
                        </div>
                      </div>

@@ -15,18 +15,18 @@ interface MarketData {
 }
 
 const CROP_BASE_PRICES: Record<string, { base: number, volatility: number, unit: string }> = {
-  'Wheat (Mill Quality)': { base: 2350, volatility: 150, unit: 'Quintal' },
-  'Soybean (Yellow)': { base: 4600, volatility: 350, unit: 'Quintal' },
-  'Cotton (Long staple)': { base: 7100, volatility: 500, unit: 'Quintal' },
-  'Tur / Arhar (Pigeon Pea)': { base: 9500, volatility: 800, unit: 'Quintal' },
-  'Gram (Chana)': { base: 6200, volatility: 400, unit: 'Quintal' },
-  'Onion (Red)': { base: 1800, volatility: 800, unit: 'Quintal' },
-  'Tomato (Local)': { base: 1400, volatility: 1000, unit: 'Quintal' },
-  'Mustard Seed': { base: 5100, volatility: 300, unit: 'Quintal' },
-  'Maize (Yellow)': { base: 2200, volatility: 200, unit: 'Quintal' },
-  'Paddy (Common)': { base: 2250, volatility: 150, unit: 'Quintal' },
-  'Potato (Fresh)': { base: 1200, volatility: 500, unit: 'Quintal' },
-  'Groundnut': { base: 5800, volatility: 400, unit: 'Quintal' }
+  'wheat': { base: 2350, volatility: 150, unit: 'Quintal' },
+  'soybean': { base: 4600, volatility: 350, unit: 'Quintal' },
+  'cotton': { base: 7100, volatility: 500, unit: 'Quintal' },
+  'pigeon_pea': { base: 9500, volatility: 800, unit: 'Quintal' },
+  'chickpea': { base: 6200, volatility: 400, unit: 'Quintal' },
+  'onion': { base: 1800, volatility: 800, unit: 'Quintal' },
+  'tomato': { base: 1400, volatility: 1000, unit: 'Quintal' },
+  'mustard': { base: 5100, volatility: 300, unit: 'Quintal' },
+  'maize': { base: 2200, volatility: 200, unit: 'Quintal' },
+  'paddy': { base: 2250, volatility: 150, unit: 'Quintal' },
+  'potato': { base: 1200, volatility: 500, unit: 'Quintal' },
+  'groundnut': { base: 5800, volatility: 400, unit: 'Quintal' }
 };
 
 // Seeded random number generator
@@ -131,10 +131,11 @@ export default function MarketPrices() {
     getPos();
   }, []);
 
-  const filteredMarkets = markets.filter(m => 
-    m.cropName.toLowerCase().includes(search.toLowerCase()) ||
-    m.mandiName.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredMarkets = markets.filter(m => {
+    const translation = (t as any)(m.cropName) || m.cropName;
+    return translation.toLowerCase().includes(search.toLowerCase()) ||
+    m.mandiName.toLowerCase().includes(search.toLowerCase());
+  });
 
   return (
     <div className="p-4 pb-24">
@@ -208,7 +209,7 @@ export default function MarketPrices() {
                     <div className="text-[10px] uppercase font-bold text-stone-400 mb-1 flex items-center gap-1">
                       <Icons.Warehouse size={10} /> {market.mandiName}
                     </div>
-                    <h3 className="text-xl font-black text-stone-800">{market.cropName}</h3>
+                    <h3 className="text-xl font-black text-stone-800">{(t as any)(market.cropName) || market.cropName}</h3>
                   </div>
                   <div className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 ${
                     market.trend === 'up' ? 'bg-green-100 text-green-700' : 
@@ -242,7 +243,7 @@ export default function MarketPrices() {
               </motion.div>
             )) : (
               <div className="p-12 text-center text-stone-400 font-bold">
-                 No markets found for "{search}"
+                 {(t as any)('no_markets_found') || 'No markets found'} "{search}"
               </div>
             )}
           </AnimatePresence>
@@ -252,10 +253,10 @@ export default function MarketPrices() {
       {/* Info Card */}
       <div className="mt-8 bg-indigo-50 rounded-3xl p-6 border border-indigo-100">
          <h4 className="font-bold text-indigo-900 flex items-center gap-2 mb-2">
-            <Icons.Info size={18} /> Market Intelligence
+            <Icons.Info size={18} /> {(t as any)('market_intelligence') || 'Market Intelligence'}
          </h4>
          <p className="text-sm text-indigo-700 leading-relaxed">
-            Market prices are estimated daily aggregations for your region's mandi. Due to intra-day volatility, always verify final rates with local merchants before transaction.
+            {(t as any)('market_intelligence_desc') || 'Market prices are estimated daily aggregations for your region\'s mandi. Due to intra-day volatility, always verify final rates with local merchants before transaction.'}
          </p>
       </div>
     </div>

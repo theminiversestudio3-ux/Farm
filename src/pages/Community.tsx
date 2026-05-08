@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import * as Icons from 'lucide-react';
 import { motion } from 'motion/react';
 
+import { useLanguage } from '../context/LanguageContext';
+
 const mockPosts = [
   { id: 1, author: 'Ramesh Singh', time: '2 hours ago', avatar: 'R', content: 'Has anyone tried the new wheat variety HD-3226? Im planning to sow it this season in MP.', likes: 12, comments: 4, type: 'Question' },
   { id: 2, author: 'Amit Patel', time: '5 hours ago', avatar: 'A', content: 'Pink bollworm attacks seem higher this year. Using Neem oil spray as a preventive measure.', likes: 34, comments: 8, type: 'Tip' },
@@ -10,27 +12,28 @@ const mockPosts = [
 ];
 
 export default function Community() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('All');
   
   return (
     <div className="p-4 pb-24 max-w-lg mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-stone-800 flex items-center gap-2">
-          <Icons.Users className="text-green-600" /> Farmers Community
+          <Icons.Users className="text-green-600" /> {(t as any)('farmers_community') || 'Farmers Community'}
         </h1>
         <button className="bg-green-600 text-white p-2 px-4 rounded-full text-sm font-bold shadow-sm shadow-green-600/30">
-          New Post
+          {(t as any)('new_post') || 'New Post'}
         </button>
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-4 hide-scrollbar">
-        {['All', 'Questions', 'Tips', 'Market News'].map(tab => (
+        {['all', 'questions', 'tips', 'market_news'].map(tabKey => (
            <button 
-             key={tab}
-             onClick={() => setActiveTab(tab)}
-             className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${activeTab === tab ? 'bg-stone-800 text-white' : 'bg-stone-200/50 text-stone-600'}`}
+             key={tabKey}
+             onClick={() => setActiveTab(tabKey)}
+             className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${activeTab === tabKey ? 'bg-stone-800 text-white' : 'bg-stone-200/50 text-stone-600'}`}
            >
-             {tab}
+             {(t as any)(tabKey)}
            </button>
         ))}
       </div>
@@ -69,7 +72,7 @@ export default function Community() {
                   <Icons.MessageSquare size={16} /> {post.comments}
                </button>
                <button className="flex items-center gap-1 hover:text-stone-600 transition ml-auto">
-                  <Icons.Share2 size={16} /> Share
+                  <Icons.Share2 size={16} /> {(t as any)('share') || 'Share'}
                </button>
             </div>
           </motion.div>

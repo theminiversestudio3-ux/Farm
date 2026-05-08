@@ -47,7 +47,7 @@ function BottomNav() {
           </NavLink>
           
           <div className="my-2 border-t border-stone-100" />
-          <div className="px-3 py-1 text-[10px] font-bold text-stone-400 uppercase tracking-wider">Services</div>
+          <div className="px-3 py-1 text-[10px] font-bold text-stone-400 uppercase tracking-wider">{(t as any)('services') || 'Services'}</div>
           
           <NavLink 
             to="/market" 
@@ -63,7 +63,7 @@ function BottomNav() {
             className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-green-50 text-green-700 font-bold' : 'text-stone-600 hover:bg-stone-50'}`}
           >
             <Icons.Users size={20} />
-            <span className="text-sm">Community</span>
+            <span className="text-sm">{(t as any)('nav_community') || 'Community'}</span>
           </NavLink>
           <NavLink 
             to="/schemes" 
@@ -71,7 +71,7 @@ function BottomNav() {
             className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-green-50 text-green-700 font-bold' : 'text-stone-600 hover:bg-stone-50'}`}
           >
             <Icons.Landmark size={20} />
-            <span className="text-sm">Govt Schemes</span>
+            <span className="text-sm">{(t as any)('nav_schemes') || 'Govt Schemes'}</span>
           </NavLink>
           <NavLink 
             to="/expert" 
@@ -79,7 +79,7 @@ function BottomNav() {
             className={({ isActive }) => `flex items-center gap-3 p-3 rounded-xl transition-colors ${isActive ? 'bg-green-50 text-green-700 font-bold' : 'text-stone-600 hover:bg-stone-50'}`}
           >
             <Icons.PhoneCall size={20} />
-            <span className="text-sm">Ask Expert</span>
+            <span className="text-sm">{(t as any)('nav_expert') || 'Ask Expert'}</span>
           </NavLink>
         </div>
       )}

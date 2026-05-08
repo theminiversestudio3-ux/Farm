@@ -149,9 +149,9 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
       <div className="mb-6 flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold text-stone-800 flex items-center gap-2">
-            <Icons.Activity className="text-green-700" /> Continuous Tracker
+            <Icons.Activity className="text-green-700" /> {(t as any)('Continuous Tracker')}
           </h2>
-          <p className="text-sm text-stone-600 mt-1">Real-time monitoring from seed to harvest.</p>
+          <p className="text-sm text-stone-600 mt-1">{(t as any)('Real-time monitoring from seed to harvest.')}</p>
         </div>
         <button 
           onClick={() => setShowSurvey(true)}
@@ -166,13 +166,13 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
           <div className="bg-green-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
              <Icons.Radar size={32} className="text-green-600" />
           </div>
-          <h3 className="font-bold text-stone-800 mb-2">No Active Logs</h3>
-          <p className="text-sm text-stone-500 mb-6">Start tracking real-time growth progress for your farm.</p>
+          <h3 className="font-bold text-stone-800 mb-2">{(t as any)('No Active Logs')}</h3>
+          <p className="text-sm text-stone-500 mb-6">{(t as any)('Start tracking real-time growth progress for your farm.')}</p>
           <button 
             onClick={() => setShowSurvey(true)}
             className="bg-green-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-sm"
           >
-            Start Tracking
+            {(t as any)('Start Tracking')}
           </button>
         </div>
       )}
@@ -186,26 +186,26 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
             className="bg-white rounded-3xl p-6 shadow-sm border border-stone-200 mb-6"
           >
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-lg text-stone-800">Add Crop to Tracker</h3>
+              <h3 className="font-bold text-lg text-stone-800">{(t as any)('Add Crop to Tracker')}</h3>
               <button onClick={() => setShowSurvey(false)} className="text-stone-400 hover:text-stone-600">
                  <Icons.X size={20} />
               </button>
             </div>
             <form onSubmit={handleAddCrop} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-stone-600 mb-1">What did you plant?</label>
+                <label className="block text-xs font-semibold text-stone-600 mb-1">{(t as any)('What did you plant?')}</label>
                 <select 
                   required
                   value={newCropId}
                   onChange={(e) => setNewCropId(e.target.value)}
                   className="w-full p-3 rounded-xl border border-stone-200 outline-none focus:border-green-500 bg-stone-50"
                 >
-                  <option value="">Select a crop...</option>
-                  {crops.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  <option value="">{(t as any)('Select a crop...')}</option>
+                  {crops.map(c => <option key={c.id} value={c.id}>{(t as any)(c.id) || c.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-stone-600 mb-1">Sowing Date</label>
+                <label className="block text-xs font-semibold text-stone-600 mb-1">{(t as any)('Sowing Date')}</label>
                 <input 
                   type="date"
                   required
@@ -216,11 +216,11 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-stone-600 mb-1">Land Area</label>
+                <label className="block text-xs font-semibold text-stone-600 mb-1">{(t as any)('Land Area')}</label>
                 <input 
                   type="text"
                   required
-                  placeholder="e.g. 2 Acres, 1 Hectare"
+                  placeholder={(t as any)('e.g. 2 Acres, 1 Hectare')}
                   value={newArea}
                   onChange={(e) => setNewArea(e.target.value)}
                   className="w-full p-3 rounded-xl border border-stone-200 outline-none focus:border-green-500 bg-stone-50"
@@ -230,7 +230,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                 type="submit"
                 className="w-full bg-green-700 text-white font-bold py-3.5 rounded-xl shadow-sm hover:bg-green-800 transition flex justify-center items-center gap-2"
               >
-                <Icons.Save size={18} /> Add Crop
+                <Icons.Save size={18} /> {(t as any)('Add Crop')}
               </button>
             </form>
           </motion.div>
@@ -266,7 +266,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
              <div key={log.id} className="bg-white rounded-[2rem] p-5 shadow-sm border border-stone-200 overflow-hidden relative">
               {log.mode === 'test' && (
                 <div className="absolute top-0 right-0 bg-stone-100 text-stone-500 text-[9px] uppercase font-bold px-3 py-1 rounded-bl-xl border-l border-b border-stone-200">
-                  Simulation (Test)
+                  {(t as any)('Simulation (Test)')}
                 </div>
               )}
               
@@ -277,7 +277,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                   </div>
                   <div>
                     <h3 className="font-bold text-stone-800 text-lg flex items-center gap-2">
-                      {crop?.name}
+                      {(t as any)(crop?.id || 'unknown') || crop?.name}
                       {log.healthStatus && (
                         <span className={`text-[10px] px-2 py-0.5 rounded-md uppercase font-bold tracking-wider ${
                           log.healthStatus === 'Healthy' ? 'bg-green-100 text-green-700' :
@@ -291,7 +291,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                     <div className="text-xs text-stone-500 flex items-center gap-1.5 mt-0.5">
                        <Icons.MapPin size={12} className="opacity-70" /> {log.landArea}
                        <span className="opacity-50">|</span>
-                       <Icons.Calendar size={12} className="opacity-70" /> Planted {new Date(log.sowingDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}
+                       <Icons.Calendar size={12} className="opacity-70" /> {(t as any)('Planted')} {new Date(log.sowingDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}
                     </div>
                   </div>
                 </div>
@@ -304,9 +304,9 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
               <div className="bg-stone-50 rounded-2xl p-4 mb-4 border border-stone-100 shadow-inner">
                  <div className="flex justify-between items-end mb-2">
                     <div>
-                      <div className="text-[10px] uppercase font-bold text-green-600 tracking-wider mb-1">Current Stage</div>
+                      <div className="text-[10px] uppercase font-bold text-green-600 tracking-wider mb-1">{(t as any)('Current Stage')}</div>
                       <div className="font-bold text-stone-800 flex items-center gap-2">
-                        {currentStage} {log.stage && <span className="bg-amber-100 text-amber-800 text-[9px] px-1.5 py-0.5 rounded uppercase">Manual Override</span>}
+                        {currentStage} {log.stage && <span className="bg-amber-100 text-amber-800 text-[9px] px-1.5 py-0.5 rounded uppercase">{(t as any)('Manual Override')}</span>}
                       </div>
                     </div>
                     <div className="text-right">
@@ -341,7 +341,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
               {log.notes && log.notes.length > 1 && (
                  <div className="mb-4">
                     <div className="text-xs font-semibold text-stone-500 mb-2 flex items-center gap-1.5">
-                       <Icons.FileText size={14} /> History & Diagnoses
+                       <Icons.FileText size={14} /> {(t as any)('History & Diagnoses')}
                     </div>
                     <div className="space-y-1">
                       {log.notes.slice(-3).map((note, i) => (
@@ -357,7 +357,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
               {/* Mini Manual Stage Override */}
               <div className="mb-5">
                  <div className="text-xs font-semibold text-stone-500 mb-2 flex items-center gap-1.5">
-                    <Icons.SlidersHorizontal size={14} /> Adjust Stage Manually
+                    <Icons.SlidersHorizontal size={14} /> {(t as any)('Adjust Stage Manually')}
                  </div>
                  <div className="flex overflow-x-auto pb-2 gap-2 hide-scrollbar">
                    {STAGES.map((s) => (
@@ -382,7 +382,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                 className="w-full bg-indigo-50 hover:bg-indigo-100 disabled:bg-stone-100 text-indigo-700 disabled:text-stone-400 border border-indigo-200 disabled:border-stone-200 font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition shadow-sm"
               >
                 {loadingAnalysis[log.id] ? <Icons.Loader2 className="animate-spin" size={18} /> : <Icons.Activity size={18} />}
-                {loadingAnalysis[log.id] ? 'Analyzing Real-time Data...' : 'Run Smart Growth Check'}
+                {loadingAnalysis[log.id] ? (t as any)('Analyzing Real-time Data...') : (t as any)('Run Smart Growth Check')}
               </button>
 
               <AnimatePresence>
@@ -400,7 +400,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                           <div className="mt-4 bg-white rounded-2xl border border-indigo-100 shadow-[0_0_15px_rgba(79,70,229,0.05)] text-sm relative">
                              <div className="flex justify-between items-center bg-indigo-50/50 p-4 border-b border-indigo-100 rounded-t-2xl">
                                <h4 className="font-bold text-indigo-900 m-0 flex items-center gap-2">
-                                  <Icons.Sparkles size={16} className="text-indigo-500" /> AI Growth Insight
+                                  <Icons.Sparkles size={16} className="text-indigo-500" /> {(t as any)('AI Growth Insight')}
                                </h4>
                                <button onClick={() => setAnalysis(log.id, null)} className="text-indigo-400 hover:text-indigo-600 bg-white shadow-sm p-1.5 rounded-full transition-colors">
                                   <Icons.X size={14} />
@@ -417,7 +417,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                                     }`}>
                                       {data.status}
                                     </span>
-                                    <h5 className="font-bold text-stone-800 text-base">Real-time Status</h5>
+                                    <h5 className="font-bold text-stone-800 text-base">{(t as any)('Real-time Status')}</h5>
                                   </div>
                                   <p className="text-stone-600 leading-relaxed bg-stone-50 p-3 rounded-xl border border-stone-100">{data.statusAnalysis}</p>
                                 </div>
@@ -446,7 +446,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                                 <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 p-4 rounded-xl shadow-inner">
                                   <h5 className="font-bold text-amber-900 flex items-center gap-2 mb-2">
                                     <Icons.Lightbulb size={16} className="text-amber-600" />
-                                    Ori's Pro-Tip: {data.proTipTitle}
+                                    {(t as any)("Ori's Pro-Tip:")} {data.proTipTitle}
                                   </h5>
                                   <p className="text-amber-800/80 text-sm leading-relaxed">{data.proTipDescription}</p>
                                 </div>
@@ -454,7 +454,7 @@ IMPORTANT: You MUST return the result as a strict JSON object with this EXACT sc
                                 {/* Next Check In */}
                                 <div className="text-center text-xs font-semibold text-stone-500 pt-3 border-t border-stone-100">
                                   <Icons.CalendarClock size={14} className="inline mr-1 mb-0.5 opacity-70" />
-                                  Next Check-in: {data.nextCheckIn}
+                                  {(t as any)('Next Check-in:')} {data.nextCheckIn}
                                 </div>
                              </div>
                           </div>

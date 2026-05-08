@@ -2,8 +2,9 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { en } from '../locales/en';
 import { hi } from '../locales/hi';
 import { mr } from '../locales/mr';
+import { bn } from '../locales/bn';
 
-type LanguageCode = 'en' | 'hi' | 'mr';
+type LanguageCode = 'en' | 'hi' | 'mr' | 'bn';
 type Translations = typeof en;
 
 interface LanguageContextType {
@@ -12,7 +13,7 @@ interface LanguageContextType {
   t: (key: keyof Translations) => string;
 }
 
-const translations = { en, hi, mr };
+const translations = { en, hi, mr, bn };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
@@ -26,6 +27,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     } else {
       const browserLang = navigator.language.slice(0, 2);
       if (browserLang === 'hi') setLang('hi');
+      else if (browserLang === 'bn') setLang('bn');
       else if (browserLang === 'mr') setLang('mr'); // browser might not use 'mr', but just in case
       else setLang('en');
     }
